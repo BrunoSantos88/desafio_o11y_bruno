@@ -1,9 +1,13 @@
-global:
-  resolve_timeout: 5m
 route:
-  receiver: webhook_receiver
+  group_by: ['alertname', 'job']
+
+  group_wait: 5s
+  group_interval: 5s
+  repeat_interval: 5s
+
+  receiver: discord
+
 receivers:
-    - name: webhook_receiver
-      webhook_configs:
-        - url: 'https://webhook.site/62e5b561-f020-45cb-9d27-d1abeae67be9'
-          send_resolved: false
+- name: discord
+  discord_configs:
+  - webhook_url: "https://discord.com/api/webhooks/1177696640220549281/Njp7bltykN_qzSan3I28vs-ERpWYCOWzuyrHJ1wpk-0gaBvssM6rziwvkXFqtWHWSv8c"
