@@ -198,7 +198,7 @@ $ docker-compose ps
 
 Agora é com você, configure os passos necessários para ser possível a geração de alertas utilizando o alertmanager e o webhook.
 
-# Alertmanager
+# alertmanager
 ```yaml
 
 route:
@@ -215,7 +215,7 @@ receivers:
   discord_configs:
   - webhook_url: 'https://discord.com/api/webhooks/#########'
 ```
-# Rules.yml
+# rules.yml
 ```yaml
 groups:
  - name: Count greater than 5
