@@ -15,6 +15,9 @@ services:
     image: grafana/grafana
     ports:
     - '3000:3000'
+    volumes:
+      - ./datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
     network_mode: "host"
   
   alertmanager:
@@ -24,4 +27,14 @@ services:
       - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
     ports:
       - 9093:9093
+    network_mode: "host"
+
+  cadvisor:
+    image: google/cadvisor:latest
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
     network_mode: "host"
