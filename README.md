@@ -117,7 +117,7 @@ No arquivo **prometheus.yml** no diretório prometheus (conforme configurado ant
 
 * Certifique-se de substituir **'your-app-container:your-app-port'** pelo host e porta onde sua aplicação python está sendo executada.
 
-![Alt text](image.png)
+![Alt text](docker-compose.png)
 
 ### Passo 5: Iniciando o Ambiente de Observabilidade
 
