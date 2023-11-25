@@ -16,7 +16,7 @@ services:
     ports:
     - '3000:3000'
     volumes:
-      - ./prometheus.ds.yml:/etc/grafana/provisioning/datasources
+      - ./datasources/prometheus.ds.yml:/etc/grafana/provisioning/datasources
       - grafana-data:/var/lib/grafana
     network_mode: "host"
   
