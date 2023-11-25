@@ -15,9 +15,6 @@ services:
     image: grafana/grafana
     ports:
     - '3000:3000'
-    volumes:
-      - ./datasources:/etc/grafana/provisioning/datasources
-      - grafana-data:/var/lib/grafana
     network_mode: "host"
   
   alertmanager:
@@ -38,7 +35,3 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
     network_mode: "host"
-
-
-volumes:
-  grafana-data:
