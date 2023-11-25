@@ -3,13 +3,13 @@ groups:
    rules:
    - alert: CountGreaterThan5
      expr: ping_request_count > 5
-     for: 10s
+     for: 5s
 
  - name: Uptime app
    rules:
    - alert: ServiceDown
      expr: up{instance="localhost:3001", job="python_server"} == 0
-     for: 10s
+     for: 5s
      labels:
       severity: critical
      annotations:
@@ -20,7 +20,7 @@ groups:
    rules:
    - alert: AppHighErrorRate
      expr: app_errors_total{job="python_server"} > 5
-     for: 10s
+     for: 5s
      labels:
        severity: critical
      annotations:
@@ -31,7 +31,7 @@ groups:
    rules:
    - alert: HighFunctionExecutionCount
      expr: app_function_duration_seconds_count{job="python_server"} > 5
-     for: 10s
+     for: 5s
      labels:
        severity: warning
      annotations:
