@@ -18,7 +18,6 @@ services:
     network_mode: "host"
   
   alertmanager:
-    container_name: alertmanager
     image: prom/alertmanager
     volumes:
       - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
