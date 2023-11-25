@@ -46,6 +46,7 @@ services:
     image: prom/prometheus
     volumes:
     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    - ./rules.yml:/etc/prometheus/rules.yml
     command:
     - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
@@ -56,7 +57,21 @@ services:
     image: grafana/grafana
     ports:
     - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
     network_mode: "host"
+  
+  alertmanager:
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - 9093:9093
+    network_mode: "host"
+
+volumes:
+  grafana-data:
+
 ```
 
 1.4. Crie um diretório chamado **prometheus** e, dentro dele, crie um arquivo **prometheus.yml** para configurar o Prometheus:
@@ -64,14 +79,20 @@ services:
   ```yaml
 global:
   scrape_interval: 15s
-
+rule_files:
+  - rules.yml
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+       - localhost:9093
 scrape_configs:
 - job_name: 'prometheus'
   static_configs:
-    - targets: ['localhost:9090']
-- job_name: 'your-app'
+  - targets: ['localhost:9090']
+- job_name: 'python_server'
   static_configs:
-    - targets: ['your-app-container:your-app-port']
+  - targets: ['localhost:3001']
   ```
 
 * **Dica:** Você precisará ajustar a identação do arquivo
@@ -93,7 +114,7 @@ scrape_configs:
 2.3 Inicie sua aplicação e exponha-a em uma porta específica.
 
 ```console
-python app.py
+python python-app/app.py
 ```
 
 2.5 Testando a aplicação python.
@@ -110,14 +131,13 @@ No arquivo **prometheus.yml** no diretório prometheus (conforme configurado ant
 
 
 ```yaml
-- job_name: 'nodejs-app'
+- job_name: 'python_server'
   static_configs:
-    - targets: ['your-app-container:your-app-port']
+  - targets: ['localhost:3001']
 ```
 
 * Certifique-se de substituir **'your-app-container:your-app-port'** pelo host e porta onde sua aplicação python está sendo executada.
 
-![Alt text](docker-compose.png)
 
 ### Passo 5: Iniciando o Ambiente de Observabilidade
 
@@ -177,6 +197,65 @@ $ docker-compose ps
 
 Agora é com você, configure os passos necessários para ser possível a geração de alertas utilizando o alertmanager e o webhook.
 
+# Alertmanager
+```yaml
+
+route:
+  group_by: ['job','instance']
+
+  group_wait: 5s
+  group_interval: 10s
+  repeat_interval: 15s
+
+  receiver: discord
+
+receivers:
+- name: discord
+  discord_configs:
+  - webhook_url: 'https://discord.com/api/webhooks/#########'
+```
+# Rules.yml
+```yaml
+groups:
+ - name: Count greater than 5
+   rules:
+   - alert: CountGreaterThan5
+     expr: ping_request_count > 5
+     for: 5s
+
+ - name: Uptime app
+   rules:
+   - alert: ServiceDown
+     expr: up{instance="localhost:3001", job="python_server"} == 0
+     for: 5s
+     labels:
+      severity: critical
+     annotations:
+       summary: "Service is down"
+       description: "The Python server on localhost:3001 is not responding"
+  
+ - name: Error_total
+   rules:
+   - alert: AppHighErrorRate
+     expr: app_errors_total{job="python_server"} > 5
+     for: 5s
+     labels:
+       severity: critical
+     annotations:
+      summary: "High error rate in the application"
+      description: "The total count of errors is higher than 100 for 5s."
+
+ - name: Durarion_App
+   rules:
+   - alert: HighFunctionExecutionCount
+     expr: app_function_duration_seconds_count{job="python_server"} > 5
+     for: 5s
+     labels:
+       severity: warning
+     annotations:
+      summary: "High function execution count"
+      description: "The Python server function is being executed frequently."
+```
 
 Envie seu arquivos atualizados (docker-compose.yml, rules.yml, alertmanager.yml) para o e-mail: academy@o2b.com.br com prints do seu ambiente funcionando: Webhook disparado.
 
