@@ -4,12 +4,3 @@ groups:
    - alert: CountGreaterThan5
      expr: ping_request_count > 5
      for: 10s
-
-     
-   -  alert: python_serverContainerDown
-      expr: up{instance="localhost:3001", job="python_server"} == 0
-      labels:
-         severity: 'critical'
-      annotations:
-         summary: 'Alert: python_server container is down'
-         description: 'The python_server container is down or not responding.'
