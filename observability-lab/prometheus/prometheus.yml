@@ -14,7 +14,3 @@ scrape_configs:
 - job_name: 'python_server'
   static_configs:
   - targets: ['localhost:3001']
-- job_name: 'cadvisor'
-  scrape_interval: 5s
-  static_configs:
-    - targets: ["localhost:8080"]
