@@ -14,3 +14,6 @@ scrape_configs:
 - job_name: 'python_server'
   static_configs:
   - targets: ['localhost:3001']
+- job_name: 'node-exporter'
+  static_configs:
+  - targets: ['localhost:9200']
