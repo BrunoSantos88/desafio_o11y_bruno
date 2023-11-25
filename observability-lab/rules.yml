@@ -27,7 +27,7 @@ groups:
       summary: "High error rate in the application"
       description: "The total count of errors is higher than 100 for 5s."
 
- - name: example_rules
+ - name: Durarion_App
    rules:
    - alert: HighFunctionExecutionCount
      expr: app_function_duration_seconds_count{job="python_server"} > 5
