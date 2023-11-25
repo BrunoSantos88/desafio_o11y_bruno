@@ -4,3 +4,37 @@ groups:
    - alert: CountGreaterThan5
      expr: ping_request_count > 5
      for: 10s
+
+ - name: Uptime app
+   rules:
+   - alert: ServiceDown
+     expr: up{instance="localhost:3001", job="python_server"} == 0
+     for: 10s
+     labels:
+      severity: critical
+     annotations:
+       summary: "Service is down"
+       description: "The Python server on localhost:3001 is not responding"
+  
+ - name: Error_total
+   rules:
+   - alert: AppHighErrorRate
+     expr: app_errors_total{job="python_server"} > 5
+     for: 10s
+     labels:
+       severity: critical
+     annotations:
+      summary: "High error rate in the application"
+      description: "The total count of errors is higher than 100 for 5s."
+
+ - name: example_rules
+   rules:
+   - alert: HighFunctionExecutionCount
+     expr: app_function_duration_seconds_count{job="python_server"} > 5
+     for: 10s
+     labels:
+       severity: warning
+     annotations:
+      summary: "High function execution count"
+      description: "The Python server function is being executed frequently."
+
