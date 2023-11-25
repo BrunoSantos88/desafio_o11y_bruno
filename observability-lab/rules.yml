@@ -7,7 +7,7 @@ groups:
 
      
    -  alert: python_serverContainerDown
-      expr: up{job="python_server"} == 0
+      expr: up{instance="localhost:3001", job="python_server"} == 0
       labels:
          severity: 'critical'
       annotations:
