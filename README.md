@@ -114,7 +114,7 @@ scrape_configs:
 2.3 Inicie sua aplicação e exponha-a em uma porta específica.
 
 ```console
-python python-app/app.py
+python app.py
 ```
 
 2.5 Testando a aplicação python.
